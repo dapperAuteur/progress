@@ -1,5 +1,5 @@
-import axios from "axios";
+import axios from 'axios';
 
 export const login = cred => {
-  return axios.post("http://localhost:5000/api/auth", cred);
+  return axios.post('https://maljuburi-progress.herokuapp.com/api/auth', cred);
 };
