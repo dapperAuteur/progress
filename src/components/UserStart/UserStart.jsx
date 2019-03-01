@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classes from './UserStart.module.css';
 class UserStart extends Component {
   handleDoneUser = (start, user) => {
     this.props.handleDoneUser(start, user);
@@ -10,24 +11,29 @@ class UserStart extends Component {
 
     return (
       <div className="container">
-        <h1 className="text-center">Start</h1>
+        <div className="row">
+          <div className="col-6 text-center">
+            Name<h5 className="text-primary"> {user.username}</h5>
+          </div>
+          <div className="col-6 text-center">
+            Progress name<h5 className="text-primary">{user.progressName}</h5>
+          </div>
+        </div>
         <hr />
-        <h3>{user.username}</h3>
-        <h3>{user.progressName}</h3>
         {!this.props.start ? (
-          <button
+          <div
             onClick={() => this.props.handleStartUser(user)}
-            className="btn btn-primary"
+            className={classes.startBtn}
           >
-            Start
-          </button>
+            <h3>START</h3>
+          </div>
         ) : (
-          <button
+          <div
             onClick={() => this.handleDoneUser(this.props.start, user)}
-            className="btn btn-success"
+            className={classes.doneBtn}
           >
-            Done
-          </button>
+            <h3>DONE</h3>
+          </div>
         )}
       </div>
     );

@@ -1,5 +1,5 @@
 import axios from 'axios';
-
 export const login = cred => {
-  return axios.post('https://maljuburi-progress.herokuapp.com/api/auth', cred);
+  const apiURL = process.env.REACT_APP_API_URL;
+  return axios.post(apiURL + '/api/auth', cred);
 };

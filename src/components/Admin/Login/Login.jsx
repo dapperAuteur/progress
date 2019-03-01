@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { login } from "../../../services/login";
+import React, { Component } from 'react';
+import { login } from '../../../services/login';
 class Login extends Component {
   state = {
     err: null
@@ -14,14 +14,12 @@ class Login extends Component {
     };
     try {
       const { data } = await login(obj);
-      localStorage.setItem("token", data.token);
-      // console.log(jwt);
+      localStorage.setItem('token', data.token);
       this.setState({ err: null });
-      window.location = "/progress";
+      window.location = '/progress';
     } catch ({ response }) {
       const err = response.data;
       this.setState({ err });
-      console.log(err);
     }
   };
 

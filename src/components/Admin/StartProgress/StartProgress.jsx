@@ -5,8 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 class StartProgress extends Component {
   componentDidMount() {
+    const apiURL = process.env.REACT_APP_API_URL;
     //Connect to socket server
-    const socket = io.connect('https://maljuburi-progress.herokuapp.com');
+    const socket = io.connect(apiURL);
 
     // Listen to admin data
     socket.on('server-update-data', data => {
@@ -18,7 +19,8 @@ class StartProgress extends Component {
     return (
       <div className="container">
         <h1 className="text-center">
-          Progress name : <kbd className="ml-2">{this.props.progressName}</kbd>
+          Progress name :{' '}
+          <kbd className="ml-2 px-4 ">{this.props.progressName}</kbd>
         </h1>
         <hr />
         <h5 className="text-center">
@@ -26,7 +28,10 @@ class StartProgress extends Component {
             {window.location.host}/user
           </kbd>
           <CopyToClipboard text={window.location.host + '/user'}>
-            <button className="btn btn-success shadow-sm btn-sm">
+            <button
+              title="Copy to clipboard"
+              className="btn btn-success shadow-sm btn-sm"
+            >
               <FontAwesomeIcon icon={faClipboard} />
             </button>
           </CopyToClipboard>
@@ -34,13 +39,13 @@ class StartProgress extends Component {
         <hr />
         <div className="row">
           <div className="col-4">
-            <p className=" alert text-white bg-dark">Entered</p>
+            <p className=" alert text-white bg-dark shadow-sm">Entered</p>
           </div>
           <div className="col-4">
-            <p className=" alert text-white bg-dark">In-process</p>
+            <p className=" alert text-white bg-dark shadow-sm">In-process</p>
           </div>
           <div className="col-4">
-            <p className=" alert text-white bg-dark">Done</p>
+            <p className=" alert text-white bg-dark shadow-sm">Done</p>
           </div>
         </div>
         {this.props.students.map(s => (
