@@ -6,7 +6,7 @@ import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 class StartProgress extends Component {
   componentDidMount() {
     //Connect to socket server
-    const socket = io.connect('http://localhost:5000');
+    const socket = io.connect('https://maljuburi-progress.herokuapp.com');
 
     // Listen to admin data
     socket.on('server-update-data', data => {

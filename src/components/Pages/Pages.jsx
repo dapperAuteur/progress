@@ -41,7 +41,7 @@ class Pages extends Component {
     };
 
     //Connect to socket server
-    const socket = io.connect('http://localhost:5000');
+    const socket = io.connect('https://maljuburi-progress.herokuapp.com');
     // Emit new admin data
     socket.emit('client-admin-data', obj);
 
@@ -66,7 +66,7 @@ class Pages extends Component {
       progressName: progressName.value
     };
 
-    const socket = io.connect('http://localhost:5000');
+    const socket = io.connect('https://maljuburi-progress.herokuapp.com');
     socket.emit('client-new-user', user);
 
     this.setState({
@@ -75,7 +75,7 @@ class Pages extends Component {
   };
 
   handleStartUser = user => {
-    const socket = io.connect('http://localhost:5000');
+    const socket = io.connect('https://maljuburi-progress.herokuapp.com');
     socket.emit('client-start-user', user);
 
     this.setState({
@@ -85,7 +85,7 @@ class Pages extends Component {
 
   handleDoneUser = (start, user) => {
     if (start === true) {
-      const socket = io.connect('http://localhost:5000');
+      const socket = io.connect('https://maljuburi-progress.herokuapp.com');
       socket.emit('client-end-user', user);
     }
   };
