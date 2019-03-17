@@ -1,3 +1,17 @@
+.disabledBtn {
+  cursor: disabled;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 250px;
+  background: rgb(167, 167, 167);
+  color: white;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgb(58, 58, 58);
+}
+
 .startBtn {
   margin: 0 auto;
   display: flex;
@@ -5,7 +19,7 @@
   align-items: center;
   width: 250px;
   height: 250px;
-  background: rgb(32, 150, 219);
+  background: rgb(255, 193, 7);
   color: white;
   border-radius: 50%;
   box-shadow: 0 1px 3px rgb(58, 58, 58);
@@ -13,7 +27,7 @@
 
 .startBtn:hover {
   cursor: pointer;
-  background: rgba(32, 150, 219, 0.8);
+  background: rgba(255, 193, 7, 0.8);
 }
 
 .doneBtn {

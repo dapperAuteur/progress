@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 class User extends Component {
   handleNewUser = e => {
     e.preventDefault();
-    this.props.handleNewUser(e);
-    this.props.history.push('/user/start');
+    const validUser = this.props.handleNewUser(e);
+    if (validUser) {
+      this.props.history.push("/user/start");
+    }
   };
 
   render() {
@@ -25,6 +27,7 @@ class User extends Component {
               name="username"
               id="username"
               className="form-control"
+              required
             />
           </div>
           <div className="form-group">
@@ -34,6 +37,7 @@ class User extends Component {
               name="progressName"
               id="progressName"
               className="form-control"
+              required
             />
           </div>
           <button type="submit" className="btn btn-primary">

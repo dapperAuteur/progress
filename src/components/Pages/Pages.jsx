@@ -1,35 +1,46 @@
-import React, { Component } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import io from 'socket.io-client';
-import Login from '../Admin/Login/Login';
-import Progress from '../Admin/Progress/Progress';
-import StartProgress from '../Admin/StartProgress/StartProgress';
-import User from '../User/User';
-import UserStart from '../UserStart/UserStart';
-import Done from '../Done/Done';
+import React, { Component } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
+import io from "socket.io-client";
+import Login from "../Admin/Login/Login";
+import Home from "../Home/Home";
+import Progress from "../Admin/Progress/Progress";
+import StartProgress from "../Admin/StartProgress/StartProgress";
+import User from "../User/User";
+import UserStart from "../UserStart/UserStart";
+import ProtectedRoute from "../utils/ProjectedRoute/ProtectedRoute";
 class Pages extends Component {
   state = {
-    token: localStorage.getItem('token') || '',
+    token: localStorage.getItem("token") || null,
     students: [
-      { id: 1, username: 'Adam', status: '' },
-      { id: 2, username: 'Anthony', status: '' },
-      { id: 3, username: 'Avonlea', status: '' },
-      { id: 4, username: 'Chandler', status: '' },
-      { id: 5, username: 'Christian', status: '' },
-      { id: 6, username: 'Esteban', status: '' },
-      { id: 7, username: 'Jordan', status: '' },
-      { id: 8, username: 'Krish', status: '' },
-      { id: 9, username: 'Kyle', status: '' },
-      { id: 10, username: 'Muhammad', status: '' },
-      { id: 11, username: 'Madi', status: '' },
-      { id: 12, username: 'Trent', status: '' }
+      { id: 1, username: "Adam", status: "" },
+      { id: 2, username: "Anthony", status: "" },
+      { id: 3, username: "Avonlea", status: "" },
+      { id: 4, username: "Chandler", status: "" },
+      { id: 5, username: "Christian", status: "" },
+      { id: 6, username: "Esteban", status: "" },
+      { id: 7, username: "Jordan", status: "" },
+      { id: 8, username: "Krish", status: "" },
+      { id: 9, username: "Kyle", status: "" },
+      { id: 10, username: "Muhammad", status: "" },
+      { id: 11, username: "Madi", status: "" },
+      { id: 12, username: "Trent", status: "" }
     ],
-    progressName: '',
+    progressName: null,
     apiUrl: process.env.REACT_APP_API_URL,
-    currentUser: {},
+    currentUser: null,
     start: false,
-    error: ''
+    error: ""
   };
+
+  componentDidMount() {
+    const socket = io.connect(this.state.apiUrl);
+
+    socket.on("get-users", users => {
+      if (users) {
+        this.setState({ progressName: users.progressName });
+      }
+    });
+  }
 
   // Admin Submission
   // ===================
@@ -44,7 +55,7 @@ class Pages extends Component {
     //Connect to socket server
     const socket = io.connect(this.state.apiUrl);
     // Emit new admin data
-    socket.emit('client-admin-data', obj);
+    socket.emit("client-admin-data", obj);
 
     this.setState({
       progressName: progressName.value
@@ -68,16 +79,37 @@ class Pages extends Component {
     };
 
     const socket = io.connect(this.state.apiUrl);
-    socket.emit('client-new-user', user);
 
-    this.setState({
-      currentUser: user
+    const validUser = this.state.students.filter(s => {
+      if (
+        s.username === user.username &&
+        this.state.progressName === user.progressName
+      ) {
+        return true;
+      }
+      return false;
     });
+
+    if (validUser.length > 0) {
+      socket.emit("client-new-user", user);
+
+      this.setState({
+        currentUser: user,
+        error: null
+      });
+
+      return true;
+    } else {
+      this.setState({
+        error: "Invalid username or progress name"
+      });
+      return false;
+    }
   };
 
   handleStartUser = user => {
     const socket = io.connect(this.state.apiUrl);
-    socket.emit('client-start-user', user);
+    socket.emit("client-start-user", user);
 
     this.setState({
       start: true
@@ -87,15 +119,19 @@ class Pages extends Component {
   handleDoneUser = (start, user) => {
     if (start === true) {
       const socket = io.connect(this.state.apiUrl);
-      socket.emit('client-end-user', user);
+      socket.emit("client-end-user", user);
     }
+
+    this.setState({
+      start: false
+    });
   };
 
   render() {
     return (
       <Switch>
-        {this.state.token && (
-          <Route
+        {this.state.progressName && (
+          <ProtectedRoute
             path="/progress/start"
             exact
             render={props => (
@@ -108,33 +144,37 @@ class Pages extends Component {
             )}
           />
         )}
-        {this.state.token && (
-          <Route
-            path="/progress"
-            exact
-            render={props => (
-              <Progress
-                students={this.state.students}
-                handleAdminSubmit={this.handleAdminSubmit}
-                {...props}
-              />
-            )}
-          />
-        )}
+
+        <ProtectedRoute
+          path="/progress"
+          exact
+          render={props => (
+            <Progress
+              students={this.state.students}
+              handleAdminSubmit={this.handleAdminSubmit}
+              {...props}
+            />
+          )}
+        />
 
         <Route
           path="/user/start"
           exact
-          render={props => (
-            <UserStart
-              currentUser={this.state.currentUser}
-              handleStartUser={this.handleStartUser}
-              handleDoneUser={this.handleDoneUser}
-              start={this.state.start}
-              error={this.state.error}
-              {...props}
-            />
-          )}
+          render={props => {
+            if (!this.state.currentUser && !this.state.progressName) {
+              return <Redirect to="/user" />;
+            }
+            return (
+              <UserStart
+                currentUser={this.state.currentUser}
+                handleStartUser={this.handleStartUser}
+                handleDoneUser={this.handleDoneUser}
+                start={this.state.start}
+                error={this.state.error}
+                {...props}
+              />
+            );
+          }}
         />
 
         <Route
@@ -148,8 +188,10 @@ class Pages extends Component {
             />
           )}
         />
-        <Route path="/done" exact component={Done} />
-        <Route path="/" exact component={Login} />
+
+        {!this.state.token && <Route path="/login" exact component={Login} />}
+
+        <Route path="/" exact component={Home} />
         <Redirect to="/" />
       </Switch>
     );

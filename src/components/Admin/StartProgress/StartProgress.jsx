@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import io from 'socket.io-client';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClipboard } from '@fortawesome/free-solid-svg-icons';
+import React, { Component } from "react";
+import io from "socket.io-client";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClipboard } from "@fortawesome/free-solid-svg-icons";
 class StartProgress extends Component {
   componentDidMount() {
     const apiURL = process.env.REACT_APP_API_URL;
@@ -10,7 +10,7 @@ class StartProgress extends Component {
     const socket = io.connect(apiURL);
 
     // Listen to admin data
-    socket.on('server-update-data', data => {
+    socket.on("server-update-data", data => {
       this.props.handleDataUpdate(data);
     });
   }
@@ -19,15 +19,13 @@ class StartProgress extends Component {
     return (
       <div className="container">
         <h1 className="text-center">
-          Progress name :{' '}
+          Progress name :
           <kbd className="ml-2 px-4 ">{this.props.progressName}</kbd>
         </h1>
         <hr />
         <h5 className="text-center">
-          <kbd className="p-2 bg-light text-dark">
-            {window.location.host}/user
-          </kbd>
-          <CopyToClipboard text={window.location.host + '/user'}>
+          <kbd className="p-2 bg-light text-dark">{window.location.host}</kbd>
+          <CopyToClipboard text={window.location.host}>
             <button
               title="Copy to clipboard"
               className="btn btn-success shadow-sm btn-sm"
@@ -53,17 +51,17 @@ class StartProgress extends Component {
             <div className="col-4">
               <h6
                 className={`alert shadow-sm text-${
-                  s.status === 'entered' ||
-                  s.status === 'in-process' ||
-                  s.status === 'done'
-                    ? 'light'
-                    : 'dark'
+                  s.status === "entered" ||
+                  s.status === "in-process" ||
+                  s.status === "done"
+                    ? "light"
+                    : "dark"
                 } dark bg-${
-                  s.status === 'entered' ||
-                  s.status === 'in-process' ||
-                  s.status === 'done'
-                    ? 'success'
-                    : 'light'
+                  s.status === "entered" ||
+                  s.status === "in-process" ||
+                  s.status === "done"
+                    ? "primary"
+                    : "light"
                 }`}
               >
                 {s.username}
@@ -72,13 +70,13 @@ class StartProgress extends Component {
             <div className="col-4">
               <p
                 className={`alert shadow-sm text-${
-                  s.status === 'in-process' || s.status === 'done'
-                    ? 'light'
-                    : 'muted'
+                  s.status === "in-process" || s.status === "done"
+                    ? "light"
+                    : "muted"
                 } dark bg-${
-                  s.status === 'in-process' || s.status === 'done'
-                    ? 'success'
-                    : 'light'
+                  s.status === "in-process" || s.status === "done"
+                    ? "warning"
+                    : "light"
                 }`}
               >
                 In-process
@@ -87,8 +85,8 @@ class StartProgress extends Component {
             <div className="col-4">
               <p
                 className={`alert shadow-sm text-${
-                  s.status === 'done' ? 'light' : 'muted'
-                } dark bg-${s.status === 'done' ? 'success' : 'light'}`}
+                  s.status === "done" ? "light" : "muted"
+                } dark bg-${s.status === "done" ? "success" : "light"}`}
               >
                 Done
               </p>
